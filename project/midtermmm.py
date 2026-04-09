@@ -23,7 +23,8 @@ def display_menu():
     print("3. Search student")
     print("4. Update student")
     print("5. Delete student")
-    print("6. Exit")
+    print("6. Exits")
+
 
 
 def get_menu_choice():
