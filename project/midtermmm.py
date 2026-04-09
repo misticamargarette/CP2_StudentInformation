@@ -105,7 +105,7 @@ def add_student(students):
         "name": name,
         "course": course,
         "year_level": year_level,
-        "contact_number": contact_number,
+        "contact_number": contact_number
     }
     students.append(student)
     print("Student added successfully.")
