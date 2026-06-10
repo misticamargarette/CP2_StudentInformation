@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Polytechnic University of the Philippines{% endblock %}
+
+{% block body %}
+<main class="login-page">
+    <section class="login-panel" aria-labelledby="login-title">
+        <img class="school-logo" src="{{ url_for('static', filename='pup-logo.png') }}" alt="Polytechnic University of the Philippines logo">
+        <h1 id="login-title">Polytechnic University of the Philippines</h1>
+        <p class="muted">Sign in to manage student records.</p>
+
+        {% include "_messages.html" %}
+
+        <form method="post" class="form-stack">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" autocomplete="username" required autofocus>
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+            <button class="primary-button" type="submit">Login</button>
+        </form>
+    </section>
+</main>
+{% endblock %}
