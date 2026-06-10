@@ -1,8 +1,11 @@
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-        <div class="messages" role="status" aria-live="polite">
+        <div class="messages" role="status" aria-live="polite" data-auto-dismiss>
             {% for category, message in messages %}
-                <p class="message {{ category }}">{{ message }}</p>
+                <p class="message {{ category }}">
+                    <span class="message-mark" aria-hidden="true"></span>
+                    <span>{{ message }}</span>
+                </p>
             {% endfor %}
         </div>
     {% endif %}

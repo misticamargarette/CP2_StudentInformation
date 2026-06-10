@@ -13,6 +13,10 @@
             <span class="brand-sub">/ Admin</span>
         </div>
         <div class="topbar-right">
+            <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark mode" aria-pressed="false">
+                <span class="theme-option theme-light">Light</span>
+                <span class="theme-option theme-dark">Dark</span>
+            </button>
             <div class="avatar">AD</div>
             <a class="btn-ghost" href="{{ url_for('student_web.logout') }}">Log out</a>
         </div>
@@ -41,11 +45,6 @@
                 <div class="stat-label">Year levels</div>
                 <div class="stat-value">{{ year_level_count }}</div>
                 <span class="stat-badge badge-blue">Levels</span>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Storage</div>
-                <div class="stat-value compact">JSON</div>
-                <span class="stat-badge badge-green">Local file</span>
             </div>
         </section>
 
@@ -104,8 +103,8 @@
                                 <td>
                                     <div class="action-btns">
                                         <a class="btn-edit" href="{{ url_for('student_web.edit_student', student_id=student.student_id) }}">Edit</a>
-                                        <form method="post" action="{{ url_for('student_web.delete_student', student_id=student.student_id) }}">
-                                            <button class="btn-del" type="submit" onclick="return confirm('Delete this student?')">Delete</button>
+                                        <form method="post" action="{{ url_for('student_web.delete_student', student_id=student.student_id) }}" data-delete-form data-student-name="{{ student.name }}">
+                                            <button class="btn-del" type="submit">Delete</button>
                                         </form>
                                     </div>
                                 </td>
@@ -120,10 +119,24 @@
                 <div class="empty-state">
                     <h2>No student records found.</h2>
                     <p>Add a student record to start building the list.</p>
-                    <a class="btn-primary" href="{{ url_for('student_web.add_student') }}">Add student</a>
                 </div>
             {% endif %}
         </section>
     </main>
+</div>
+
+<div class="confirm-modal" data-delete-modal hidden>
+    <div class="confirm-backdrop" data-delete-cancel></div>
+    <section class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="delete-dialog-title" aria-describedby="delete-dialog-copy">
+        <div class="confirm-icon" aria-hidden="true"></div>
+        <div>
+            <h2 id="delete-dialog-title">Delete student?</h2>
+            <p id="delete-dialog-copy">This will remove the selected student from the records and Excel file.</p>
+        </div>
+        <div class="confirm-actions">
+            <button class="btn-filter" type="button" data-delete-cancel>Cancel</button>
+            <button class="btn-danger-solid" type="button" data-delete-confirm>Delete</button>
+        </div>
+    </section>
 </div>
 {% endblock %}
