@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Logging In - Polytechnic University of the Philippines{% endblock %}
+
+{% block body %}
+<main class="loader-page" aria-labelledby="loader-title">
+    <section class="loader-panel">
+        <img class="loader-logo" src="{{ url_for('static', filename='pup-logo.png') }}" alt="Polytechnic University of the Philippines logo">
+        <h1 id="loader-title" class="sr-only">Logging in</h1>
+        <div class="login-loader" aria-hidden="true">
+            <span>L</span>
+            <span>O</span>
+            <span>G</span>
+            <span>G</span>
+            <span>I</span>
+            <span>N</span>
+            <span>G</span>
+            <span class="letter-space"></span>
+            <span>I</span>
+            <span>N</span>
+        </div>
+        <p class="muted">Please wait while the dashboard opens.</p>
+    </section>
+</main>
+
+<script>
+    window.setTimeout(function () {
+        window.location.href = "{{ url_for('student_web.dashboard') }}";
+    }, 2200);
+</script>
+{% endblock %}

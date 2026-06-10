@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% set is_edit = mode == "edit" %}
+{% block title %}{{ "Edit" if is_edit else "Add" }} Student - Polytechnic University of the Philippines{% endblock %}
+
+{% block body %}
+<div class="admin-shell">
+    <header class="admin-topbar">
+        <div class="brand">
+            <img class="brand-logo" src="{{ url_for('static', filename='pup-logo.png') }}" alt="Polytechnic University of the Philippines logo">
+            <span class="brand-name">Polytechnic University of the Philippines</span>
+            <span class="brand-sub">/ Admin</span>
+        </div>
+        <a class="btn-ghost" href="{{ url_for('student_web.dashboard') }}">Back</a>
+    </header>
+
+    <main class="admin-main form-main">
+        <div class="page-header">
+            <p class="page-label">{{ "Update record" if is_edit else "New record" }}</p>
+            <h1 class="page-title">{{ "Edit student" if is_edit else "Add student" }}</h1>
+        </div>
+
+        {% include "_messages.html" %}
+
+        <section class="student-form-card">
+            <form method="post" class="student-form">
+                <section class="form-section" aria-labelledby="identity-title">
+                    <div class="section-heading">
+                        <span class="section-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M8 7h8v2H8V7Zm0 4h8v2H8v-2Zm0 4h5v2H8v-2Z"/><path d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm0 2v14h12V5H6Z"/></svg>
+                        </span>
+                        <div>
+                            <h2 id="identity-title">Identity</h2>
+                            <p>Basic identification details</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="student_id">Student ID <span>required</span></label>
+                            <input id="student_id" name="student_id" type="text" inputmode="numeric" placeholder="e.g. 221243378" value="{{ student.student_id if student else '' }}" {% if is_edit %}disabled{% endif %} required>
+                        </div>
+
+                        <div class="field">
+                            <label for="name">Full name <span>required</span></label>
+                            <input id="name" name="name" type="text" placeholder="e.g. Juan dela Cruz" value="{{ student.name if student else '' }}" required>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="form-section" aria-labelledby="academic-title">
+                    <div class="section-heading">
+                        <span class="section-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15ZM6.5 5A.5.5 0 0 0 6 5.5v11.05c.17-.03.33-.05.5-.05H18V5H6.5ZM6 20.5a.5.5 0 0 0 .5.5H20v-2H6.5a.5.5 0 0 0-.5.5Z"/></svg>
+                        </span>
+                        <div>
+                            <h2 id="academic-title">Academic details</h2>
+                            <p>Course enrollment and standing</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="course">Course <span>required</span></label>
+                            <select id="course" name="course" required>
+                                {% set selected_course = student.course if student else '' %}
+                                <option value="" {% if not selected_course %}selected{% endif %}>Select course...</option>
+                                {% for course in [
+                                    "Bachelor of Science in Psychology",
+                                    "Bachelor of Secondary Education Major in English",
+                                    "Bachelor of Secondary Education Major in Social Studies",
+                                    "Bachelor of Elementary Education",
+                                    "Bachelor of Science in Information Technology",
+                                    "Bachelor of Science in Computer Engineering",
+                                    "Bachelor of Science in Industrial Engineering",
+                                    "Bachelor of Science in Business Administration Major in Human Resource Management",
+                                    "Diploma in Computer Engineering Technology",
+                                    "Diploma in Information Technology"
+                                ] %}
+                                    <option value="{{ course }}" {% if selected_course == course %}selected{% endif %}>{{ course }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label for="status">Status</label>
+                            {% set selected_status = student.status if student and student.status else 'Active' %}
+                            <select id="status" name="status">
+                                <option value="Active" {% if selected_status == "Active" %}selected{% endif %}>Active</option>
+                                <option value="Inactive" {% if selected_status == "Inactive" %}selected{% endif %}>Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <fieldset class="year-options">
+                        <legend>Year level <span>required</span></legend>
+                        {% set selected_year = student.year_level if student else '' %}
+                        {% for year in ["1st year", "2nd year", "3rd year", "4th year", "5th year"] %}
+                            <label>
+                                <input type="radio" name="year_level" value="{{ year }}" {% if selected_year == year or (not selected_year and loop.first) %}checked{% endif %}>
+                                <span>{{ year }}</span>
+                            </label>
+                        {% endfor %}
+                    </fieldset>
+                </section>
+
+                <section class="form-section" aria-labelledby="contact-title">
+                    <div class="section-heading">
+                        <span class="section-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M7 4h4l2 5-2.4 1.6a10.8 10.8 0 0 0 4.8 4.8L17 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 4a2 2 0 0 1 2-2h2v2H5a15 15 0 0 0 15 15v-2l-2-.8-1.7 2.5-.8-.3a12.9 12.9 0 0 1-7.9-7.9l-.3-.8L9.8 8 9 6H7V4Z"/></svg>
+                        </span>
+                        <div>
+                            <h2 id="contact-title">Contact</h2>
+                            <p>Reach the student directly</p>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="contact_number">Contact number</label>
+                        <input id="contact_number" name="contact_number" type="text" inputmode="numeric" placeholder="09XXXXXXXXX" value="{{ student.contact_number if student else '' }}" required>
+                        <p class="field-help">Philippine mobile format: 09XX XXX XXXX</p>
+                    </div>
+                </section>
+
+                <div class="form-actions form-actions-dark">
+                    <a class="btn-filter" href="{{ url_for('student_web.dashboard') }}">Cancel</a>
+                    <button class="btn-primary" type="submit">{{ "Save changes" if is_edit else "Add student" }}</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Students - Polytechnic University of the Philippines{% endblock %}
+
+{% block body %}
+<h2 class="sr-only">Student records admin panel</h2>
+
+<div class="admin-shell">
+    <header class="admin-topbar">
+        <div class="brand">
+            <img class="brand-logo" src="{{ url_for('static', filename='pup-logo.png') }}" alt="Polytechnic University of the Philippines logo">
+            <span class="brand-name">Polytechnic University of the Philippines</span>
+            <span class="brand-sub">/ Admin</span>
+        </div>
+        <div class="topbar-right">
+            <div class="avatar">AD</div>
+            <a class="btn-ghost" href="{{ url_for('student_web.logout') }}">Log out</a>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <div class="page-header">
+            <p class="page-label">Admin panel</p>
+            <h1 class="page-title">Student records</h1>
+        </div>
+
+        {% include "_messages.html" %}
+
+        <section class="stats-row" aria-label="Record summary">
+            <div class="stat-card">
+                <div class="stat-label">Total students</div>
+                <div class="stat-value">{{ total_students }}</div>
+                <span class="stat-badge badge-green">Saved records</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Courses</div>
+                <div class="stat-value">{{ course_count }}</div>
+                <span class="stat-badge badge-blue">Programs</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Year levels</div>
+                <div class="stat-value">{{ year_level_count }}</div>
+                <span class="stat-badge badge-blue">Levels</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Storage</div>
+                <div class="stat-value compact">JSON</div>
+                <span class="stat-badge badge-green">Local file</span>
+            </div>
+        </section>
+
+        <section class="admin-toolbar" aria-label="Student tools">
+            <form method="get" action="{{ url_for('student_web.dashboard') }}" class="admin-search">
+                <label class="sr-only" for="q">Search students</label>
+                <span aria-hidden="true">Search</span>
+                <input id="q" name="q" type="search" value="{{ query }}" placeholder="Search by ID, name, course, year, or contact">
+            </form>
+            <div class="toolbar-right">
+                <a class="btn-primary" href="{{ url_for('student_web.add_student') }}">Add student</a>
+            </div>
+        </section>
+
+        <section class="admin-table-wrap" aria-labelledby="table-title">
+            <h2 id="table-title" class="sr-only">Student table</h2>
+            {% if students %}
+                <table>
+                    <colgroup>
+                        <col class="col-id">
+                        <col class="col-name">
+                        <col class="col-course">
+                        <col class="col-year">
+                        <col class="col-contact">
+                        <col class="col-status">
+                        <col class="col-actions">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Course</th>
+                            <th>Year level</th>
+                            <th>Contact</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td class="mono">{{ student.student_id }}</td>
+                                <td>
+                                    <div class="name-cell">
+                                        <span class="mini-avatar {{ student.avatar_class }}">{{ student.initials }}</span>
+                                        <span>{{ student.name }}</span>
+                                    </div>
+                                </td>
+                                <td><span class="course-pill">{{ student.course }}</span></td>
+                                <td><span class="year-pill">{{ student.year_level }}</span></td>
+                                <td class="compact-cell">{{ student.contact_number }}</td>
+                                <td>
+                                    <span class="status-dot {% if student.status == 'Active' %}dot-active{% else %}dot-inactive{% endif %}"></span>
+                                    <span class="status-text">{{ student.status }}</span>
+                                </td>
+                                <td>
+                                    <div class="action-btns">
+                                        <a class="btn-edit" href="{{ url_for('student_web.edit_student', student_id=student.student_id) }}">Edit</a>
+                                        <form method="post" action="{{ url_for('student_web.delete_student', student_id=student.student_id) }}">
+                                            <button class="btn-del" type="submit" onclick="return confirm('Delete this student?')">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="footer-bar">
+                    <span>Showing {{ students|length }} of {{ total_students }} student{% if total_students != 1 %}s{% endif %}</span>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <h2>No student records found.</h2>
+                    <p>Add a student record to start building the list.</p>
+                    <a class="btn-primary" href="{{ url_for('student_web.add_student') }}">Add student</a>
+                </div>
+            {% endif %}
+        </section>
+    </main>
+</div>
+{% endblock %}
