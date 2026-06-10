@@ -4,9 +4,97 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Polytechnic University of the Philippines{% endblock %}</title>
+    <script>
+        (function () {
+            var theme = localStorage.getItem("theme") || "light";
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     {% block body %}{% endblock %}
+    <script>
+        (function () {
+            var button = document.querySelector("[data-theme-toggle]");
+            if (!button) {
+                return;
+            }
+
+            function setTheme(theme) {
+                document.documentElement.dataset.theme = theme;
+                localStorage.setItem("theme", theme);
+                button.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+            }
+
+            setTheme(document.documentElement.dataset.theme || "light");
+
+            button.addEventListener("click", function () {
+                var nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+                setTheme(nextTheme);
+            });
+        })();
+    </script>
+    <script>
+        (function () {
+            var modal = document.querySelector("[data-delete-modal]");
+            var confirmButton = document.querySelector("[data-delete-confirm]");
+            var pendingForm = null;
+
+            if (!modal || !confirmButton) {
+                return;
+            }
+
+            function openModal(form) {
+                pendingForm = form;
+                modal.hidden = false;
+                document.body.classList.add("modal-open");
+                confirmButton.focus();
+            }
+
+            function closeModal() {
+                modal.hidden = true;
+                document.body.classList.remove("modal-open");
+                pendingForm = null;
+            }
+
+            document.querySelectorAll("[data-delete-form]").forEach(function (form) {
+                form.addEventListener("submit", function (event) {
+                    event.preventDefault();
+                    openModal(form);
+                });
+            });
+
+            document.querySelectorAll("[data-delete-cancel]").forEach(function (button) {
+                button.addEventListener("click", closeModal);
+            });
+
+            confirmButton.addEventListener("click", function () {
+                if (pendingForm) {
+                    pendingForm.submit();
+                }
+            });
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape" && !modal.hidden) {
+                    closeModal();
+                }
+            });
+        })();
+    </script>
+    <script>
+        (function () {
+            var messageGroups = document.querySelectorAll("[data-auto-dismiss]");
+            messageGroups.forEach(function (group) {
+                window.setTimeout(function () {
+                    group.classList.add("is-hiding");
+                }, 2800);
+
+                window.setTimeout(function () {
+                    group.remove();
+                }, 3200);
+            });
+        })();
+    </script>
 </body>
 </html>
