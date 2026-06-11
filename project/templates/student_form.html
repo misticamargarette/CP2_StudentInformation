@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% set is_edit = mode == "edit" %}
-{% block title %}{{ "Update" if is_edit else "Add" }} Student - Polytechnic University of the Philippines{% endblock %}
 
 {% block body %}
 <div class="admin-shell {% if not is_edit %}add-student-shell{% endif %}">
@@ -41,9 +40,22 @@
                             <input id="student_id" name="student_id" type="text" maxlength="15" placeholder="e.g. 2025-00540-BN-0" value="{{ student.student_id if student else '' }}" {% if is_edit %}disabled{% endif %} required>
                         </div>
 
-                        <div class="field">
-                            <label for="name">Full name <span>required</span></label>
-                            <input id="name" name="name" type="text" value="{{ student.name if student else '' }}" required>
+                        <div class="field full">
+                            <label>Student name <span>required</span></label>
+                            <div class="name-fields">
+                                <div class="field">
+                                    <label for="last_name">Last name <span>required</span></label>
+                                    <input id="last_name" name="last_name" type="text" value="{{ student.last_name if student else '' }}" required>
+                                </div>
+                                <div class="field">
+                                    <label for="first_name">First name <span>required</span></label>
+                                    <input id="first_name" name="first_name" type="text" value="{{ student.first_name if student else '' }}" required>
+                                </div>
+                                <div class="field">
+                                    <label for="middle_initial">Middle initial <span>optional</span></label>
+                                    <input id="middle_initial" name="middle_initial" type="text" maxlength="2" value="{{ student.middle_initial if student else '' }}">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -230,6 +242,7 @@
         for (var index = 0; index < 100; index += 1) {
             var firstName = firstNames[index % firstNames.length];
             var lastName = lastNames[Math.floor(index / firstNames.length) % lastNames.length];
+            var middleInitial = String.fromCharCode(65 + (index % 26)) + ".";
             var emergencyLastName = lastNames[(index + 3) % lastNames.length];
             var studentNumber = String(541 + index).padStart(5, "0");
             var contactSuffix = String(1234567 + index).padStart(7, "0");
@@ -237,7 +250,9 @@
 
             samples.push({
                 student_id: "2025-" + studentNumber + "-" + codePairs[index % codePairs.length] + "-" + (index % 10),
-                name: firstName + " " + lastName,
+                last_name: lastName,
+                first_name: firstName,
+                middle_initial: middleInitial,
                 course: courses[index % courses.length],
                 year_level: yearLevels[index % yearLevels.length],
                 age: String(18 + (index % 8)),

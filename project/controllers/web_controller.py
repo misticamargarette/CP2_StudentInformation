@@ -66,6 +66,7 @@ def create_web_controller():
     @login_required
     def dashboard():
         query = request.args.get("q", "")
+        sort = request.args.get("sort", "")
         page = request.args.get("page", "1")
         try:
             page = int(page)
@@ -75,6 +76,9 @@ def create_web_controller():
         page = max(page, 1)
         per_page = 15
         students = model.search_students(query)
+        if sort == "name":
+            students = sorted(students, key=get_last_name_sort_key)
+
         all_students = model.get_all_students()
         courses = {student["course"] for student in all_students if student.get("course")}
         year_levels = {student["year_level"] for student in all_students if student.get("year_level")}
@@ -89,6 +93,7 @@ def create_web_controller():
             "dashboard.html",
             students=student_rows,
             query=query,
+            sort=sort,
             total_students=len(all_students),
             total_filtered=total_filtered,
             course_count=len(courses),
@@ -108,7 +113,7 @@ def create_web_controller():
 
             if error:
                 flash(error, "error")
-                return render_template("student_form.html", student=student, mode="add")
+                return render_template("student_form.html", student=get_student_form_view(student), mode="add")
 
             add_result = model.add_student(student)
             if add_result is True:
@@ -117,7 +122,7 @@ def create_web_controller():
 
             if add_result == "locked":
                 flash("Close students.xlsx, then try saving again.", "error")
-                return render_template("student_form.html", student=student, mode="add")
+                return render_template("student_form.html", student=get_student_form_view(student), mode="add")
 
             flash("Student ID already exists.", "error")
 
@@ -138,18 +143,18 @@ def create_web_controller():
             if error:
                 flash(error, "error")
                 form_student = {**student, **updates}
-                return render_template("student_form.html", student=form_student, mode="edit")
+                return render_template("student_form.html", student=get_student_form_view(form_student), mode="edit")
 
             update_result = model.update_student(student_id, updates)
             if update_result == "locked":
                 flash("Close students.xlsx, then try updating again.", "error")
                 form_student = {**student, **updates}
-                return render_template("student_form.html", student=form_student, mode="edit")
+                return render_template("student_form.html", student=get_student_form_view(form_student), mode="edit")
 
             flash(f"{updates['name']} has been updated successfully.", "success")
             return redirect(url_for("student_web.dashboard"))
 
-        return render_template("student_form.html", student=student, mode="edit")
+        return render_template("student_form.html", student=get_student_form_view(student), mode="edit")
 
     @controller.route("/students/<student_id>/delete", methods=["POST"])
     @login_required
@@ -169,7 +174,7 @@ def create_web_controller():
 
 def get_student_from_form(include_id=True, form_mode="add"):
     student = {
-        "name": request.form.get("name", "").strip(),
+        "name": get_formatted_student_name(),
         "course": request.form.get("course", "").strip(),
         "year_level": request.form.get("year_level", "").strip(),
         "age": request.form.get("age", "").strip(),
@@ -189,6 +194,39 @@ def get_student_from_form(include_id=True, form_mode="add"):
         student["student_id"] = request.form.get("student_id", "").strip()
 
     return student
+
+
+def get_formatted_student_name():
+    last_name = request.form.get("last_name", "").strip()
+    first_name = request.form.get("first_name", "").strip()
+    middle_initial = request.form.get("middle_initial", "").strip().rstrip(".")
+
+    if not last_name or not first_name:
+        return ""
+
+    name_parts = [last_name, first_name]
+    if middle_initial:
+        name_parts.append(f"{middle_initial[0].upper()}.")
+
+    return ", ".join(name_parts)
+
+
+def split_student_name(name):
+    parts = [part.strip() for part in name.split(",")]
+    return {
+        "last_name": parts[0] if len(parts) > 0 else "",
+        "first_name": parts[1] if len(parts) > 1 else "",
+        "middle_initial": parts[2] if len(parts) > 2 else "",
+    }
+
+
+def get_student_form_view(student):
+    if not student:
+        return None
+
+    form_student = dict(student)
+    form_student.update(split_student_name(student.get("name", "")))
+    return form_student
 
 
 def validate_student(student, include_id=True, form_mode="add"):
@@ -246,6 +284,18 @@ def format_student_row(student, index):
         "initials": get_initials(student.get("name", "")),
         "avatar_class": ["av-teal", "av-blue", "av-purple", "av-amber"][index % 4],
     }
+
+
+def get_last_name_sort_key(student):
+    name = student.get("name", "").strip()
+    comma_parts = [part.strip() for part in name.split(",") if part.strip()]
+    if comma_parts:
+        last_name = comma_parts[0]
+    else:
+        parts = [part for part in name.split() if part]
+        last_name = parts[-1] if parts else ""
+
+    return (last_name.casefold(), name.casefold())
 
 
 def get_initials(name):

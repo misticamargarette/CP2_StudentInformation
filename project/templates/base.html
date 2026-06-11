@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Polytechnic University of the Philippines{% endblock %}</title>
+    <link rel="icon" href="{{ url_for('static', filename='pup-logo.png') }}" type="image/png">
     <script>
         (function () {
             var theme = localStorage.getItem("theme") || "light";
@@ -93,6 +94,23 @@
                 window.setTimeout(function () {
                     group.remove();
                 }, 3200);
+            });
+        })();
+    </script>
+    <script>
+        (function () {
+            var passwordInput = document.getElementById("password");
+            var toggleButton = document.querySelector("[data-password-toggle]");
+
+            if (!passwordInput || !toggleButton) {
+                return;
+            }
+
+            toggleButton.addEventListener("click", function () {
+                var isHidden = passwordInput.type === "password";
+                passwordInput.type = isHidden ? "text" : "password";
+                toggleButton.setAttribute("aria-pressed", isHidden ? "true" : "false");
+                toggleButton.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
             });
         })();
     </script>
