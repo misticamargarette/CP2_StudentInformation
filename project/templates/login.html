@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% block title %}Login - Polytechnic University of the Philippines{% endblock %}
-
 {% block body %}
 <main class="login-page">
     <section class="login-panel" aria-labelledby="login-title">
@@ -16,7 +14,20 @@
             <input id="username" name="username" type="text" autocomplete="off" required autofocus>
 
             <label for="password">Password</label>
-            <input id="password" name="password" type="password" autocomplete="off" data-lpignore="true" data-1p-ignore="true" required>
+            <div class="password-field">
+                <input id="password" name="password" type="password" autocomplete="off" data-lpignore="true" data-1p-ignore="true" required>
+                <button class="password-toggle" type="button" data-password-toggle aria-label="Show password" aria-pressed="false">
+                    <svg class="eye-icon eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg class="eye-icon eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M4 4l16 16"></path>
+                    </svg>
+                </button>
+            </div>
 
             <button class="primary-button" type="submit">Login</button>
         </form>

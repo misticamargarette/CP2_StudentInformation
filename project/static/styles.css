@@ -98,6 +98,62 @@ input {
     font: inherit;
 }
 
+.password-field {
+    position: relative;
+}
+
+.password-field input {
+    padding-right: 48px;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 8px;
+    padding: 0;
+    color: var(--muted);
+    background: transparent;
+}
+
+.password-toggle:hover {
+    color: var(--text);
+    background: var(--surface-strong);
+}
+
+.password-toggle:focus-visible {
+    outline-offset: 0;
+}
+
+.eye-icon {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.password-toggle .eye-closed {
+    display: none;
+}
+
+.password-toggle[aria-pressed="true"] .eye-open {
+    display: none;
+}
+
+.password-toggle[aria-pressed="true"] .eye-closed {
+    display: block;
+}
+
 select {
     width: 100%;
     min-height: 44px;
@@ -532,6 +588,12 @@ tbody tr:hover {
     gap: 8px;
 }
 
+.name-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(90px, 0.45fr);
+    gap: 12px;
+}
+
 .student-form .field label,
 .year-options legend {
     color: var(--text);
@@ -867,9 +929,16 @@ tbody tr:hover {
     margin-bottom: 16px;
 }
 
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: min(100%, 560px);
+}
+
 .admin-search {
     position: relative;
-    width: min(100%, 480px);
+    flex: 1;
     display: flex;
     align-items: center;
 }
@@ -895,6 +964,23 @@ tbody tr:hover {
 .admin-search input:focus {
     border-color: var(--primary);
     outline: none;
+}
+
+.btn-filter.is-active {
+    color: #fff;
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-sort {
+    width: 40px;
+    padding: 0;
+}
+
+.btn-sort svg {
+    width: 19px;
+    height: 19px;
+    fill: currentColor;
 }
 
 .btn-primary,
@@ -1406,6 +1492,12 @@ tbody tr:hover {
         width: 100%;
     }
 
+    .toolbar-left {
+        align-items: stretch;
+        flex-direction: column;
+        width: 100%;
+    }
+
     .toolbar-right {
         align-items: stretch;
         flex-direction: column;
@@ -1421,6 +1513,10 @@ tbody tr:hover {
     }
 
     .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .name-fields {
         grid-template-columns: 1fr;
     }
 

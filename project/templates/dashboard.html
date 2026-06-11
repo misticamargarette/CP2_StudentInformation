@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% block title %}Students - Polytechnic University of the Philippines{% endblock %}
-
 {% block body %}
 <h2 class="sr-only">Student records admin panel</h2>
 
@@ -58,11 +56,31 @@
         </section>
 
         <section class="admin-toolbar" aria-label="Student tools">
-            <form method="get" action="{{ url_for('student_web.dashboard') }}" class="admin-search">
-                <label class="sr-only" for="q">Search students</label>
-                <span aria-hidden="true">Search</span>
-                <input id="q" name="q" type="search" value="{{ query }}" placeholder="Search by ID, name, course, year, or contact">
-            </form>
+            <div class="toolbar-left">
+                <form method="get" action="{{ url_for('student_web.dashboard') }}" class="admin-search">
+                    <label class="sr-only" for="q">Search students</label>
+                    <span aria-hidden="true">Search</span>
+                    <input id="q" name="q" type="search" value="{{ query }}" placeholder="Search by ID, name, course, year, or contact">
+                    {% if sort %}
+                        <input type="hidden" name="sort" value="{{ sort }}">
+                    {% endif %}
+                </form>
+                {% if sort == "name" %}
+                    <a class="btn-filter btn-sort is-active" href="{{ url_for('student_web.dashboard', q=query) }}" aria-label="Turn off last name sorting" aria-pressed="true" title="Sort by last name">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M7 3h2l4 18h-2l-.8-4H5.8L5 21H3L7 3Zm-.8 12h3.6L8 6.4 6.2 15ZM15 5h6v2h-3.4L21 11v2h-6v-2h3.4L15 7V5Zm0 12h4v-2h2v6h-2v-2h-4v-2Z"/>
+                        </svg>
+                        <span class="sr-only">Sorted by last name</span>
+                    </a>
+                {% else %}
+                    <a class="btn-filter btn-sort" href="{{ url_for('student_web.dashboard', q=query, sort='name') }}" aria-label="Sort by last name" aria-pressed="false" title="Sort by last name">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M7 3h2l4 18h-2l-.8-4H5.8L5 21H3L7 3Zm-.8 12h3.6L8 6.4 6.2 15ZM15 5h6v2h-3.4L21 11v2h-6v-2h3.4L15 7V5Zm0 12h4v-2h2v6h-2v-2h-4v-2Z"/>
+                        </svg>
+                        <span class="sr-only">Sort by last name</span>
+                    </a>
+                {% endif %}
+            </div>
             <div class="toolbar-right">
                 <a class="btn-primary" href="{{ url_for('student_web.add_student') }}">Add student</a>
             </div>
@@ -139,13 +157,13 @@
                     </span>
                     <nav class="pagination" aria-label="Student table pages">
                         {% if has_previous %}
-                            <a class="btn-filter" href="{{ url_for('student_web.dashboard', q=query, page=page - 1) }}">Previous</a>
+                            <a class="btn-filter" href="{{ url_for('student_web.dashboard', q=query, sort=sort, page=page - 1) }}">Previous</a>
                         {% else %}
                             <span class="btn-filter is-disabled" aria-disabled="true">Previous</span>
                         {% endif %}
                         <span class="page-count">Page {{ page }} of {{ total_pages }}</span>
                         {% if has_next %}
-                            <a class="btn-filter" href="{{ url_for('student_web.dashboard', q=query, page=page + 1) }}">Next</a>
+                            <a class="btn-filter" href="{{ url_for('student_web.dashboard', q=query, sort=sort, page=page + 1) }}">Next</a>
                         {% else %}
                             <span class="btn-filter is-disabled" aria-disabled="true">Next</span>
                         {% endif %}
