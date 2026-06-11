@@ -66,19 +66,37 @@ def create_web_controller():
     @login_required
     def dashboard():
         query = request.args.get("q", "")
+        page = request.args.get("page", "1")
+        try:
+            page = int(page)
+        except ValueError:
+            page = 1
+
+        page = max(page, 1)
+        per_page = 15
         students = model.search_students(query)
         all_students = model.get_all_students()
         courses = {student["course"] for student in all_students if student.get("course")}
         year_levels = {student["year_level"] for student in all_students if student.get("year_level")}
-        student_rows = [format_student_row(student, index) for index, student in enumerate(students)]
+        total_filtered = len(students)
+        total_pages = max((total_filtered + per_page - 1) // per_page, 1)
+        page = min(page, total_pages)
+        start = (page - 1) * per_page
+        end = start + per_page
+        student_rows = [format_student_row(student, index) for index, student in enumerate(students[start:end], start=start)]
 
         return render_template(
             "dashboard.html",
             students=student_rows,
             query=query,
             total_students=len(all_students),
+            total_filtered=total_filtered,
             course_count=len(courses),
             year_level_count=len(year_levels),
+            page=page,
+            total_pages=total_pages,
+            has_previous=page > 1,
+            has_next=page < total_pages,
         )
 
     @controller.route("/students/add", methods=["GET", "POST"])

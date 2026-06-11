@@ -1237,6 +1237,25 @@ tbody tr:hover {
     font-weight: 700;
 }
 
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.page-count {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.btn-filter.is-disabled {
+    opacity: 0.45;
+    cursor: default;
+    pointer-events: none;
+}
+
 .message {
     display: flex;
     align-items: center;
