@@ -664,8 +664,8 @@ tbody tr:hover {
 }
 
 .admin-topbar {
-    height: 64px;
-    padding: 0 32px;
+    height: 86px;
+    padding: 0 38px;
     background: var(--topbar-bg);
     border-bottom: 1px solid var(--border);
     backdrop-filter: blur(16px);
@@ -679,7 +679,7 @@ tbody tr:hover {
 .topbar-right {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .theme-toggle {
@@ -745,21 +745,23 @@ tbody tr:hover {
 }
 
 .brand-logo {
-    width: 34px;
-    height: 34px;
+    width: 58px;
+    height: 58px;
     object-fit: contain;
     border-radius: 50%;
 }
 
 .brand-name {
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 750;
     color: var(--text);
+    line-height: 1.15;
 }
 
 .brand-sub {
     color: var(--muted);
-    font-size: 12px;
+    font-size: 15px;
+    line-height: 1.15;
 }
 
 .avatar {

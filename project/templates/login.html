@@ -11,12 +11,12 @@
 
         {% include "_messages.html" %}
 
-        <form method="post" class="form-stack">
+        <form method="post" class="form-stack" autocomplete="off">
             <label for="username">Username</label>
-            <input id="username" name="username" type="text" autocomplete="username" required autofocus>
+            <input id="username" name="username" type="text" autocomplete="off" required autofocus>
 
             <label for="password">Password</label>
-            <input id="password" name="password" type="password" autocomplete="current-password" required>
+            <input id="password" name="password" type="password" autocomplete="off" data-lpignore="true" data-1p-ignore="true" required>
 
             <button class="primary-button" type="submit">Login</button>
         </form>

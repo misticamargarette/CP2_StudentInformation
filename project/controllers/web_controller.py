@@ -42,7 +42,7 @@ def create_web_controller():
             username = request.form.get("username", "").strip()
             password = request.form.get("password", "").strip()
 
-            if username == "admin" and password == "admin":
+            if username == "admin" and password == "PUPadmin2026!":
                 session["is_logged_in"] = True
                 return redirect(url_for("student_web.login_loader"))
 

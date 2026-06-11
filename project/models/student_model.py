@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from openpyxl import Workbook, load_workbook
+from openpyxl.styles import Alignment, Font, PatternFill
 
 
 FIELDS = [
@@ -29,6 +30,19 @@ HEADERS = [
     "Emergency Contact Number",
     "Status",
 ]
+COLUMN_WIDTHS = {
+    "A": 18,
+    "B": 28,
+    "C": 58,
+    "D": 14,
+    "E": 8,
+    "F": 18,
+    "G": 38,
+    "H": 28,
+    "I": 34,
+    "J": 28,
+    "K": 14,
+}
 LEGACY_HEADERS = ["Student ID", "Name", "Course", "Year", "Contact Number", "Status"]
 LEGACY_FIELDS = ["student_id", "name", "course", "year_level", "contact_number", "status"]
 AGE_HEADERS = ["Student ID", "Name", "Course", "Year", "Age", "Contact Number", "Status"]
@@ -52,6 +66,7 @@ class StudentModel:
         sheet = workbook.active
         sheet.title = "Students"
         sheet.append(HEADERS)
+        format_student_sheet(sheet)
 
         legacy_students = self.load_legacy_json()
         for student in legacy_students:
@@ -116,6 +131,8 @@ class StudentModel:
 
         for student in self.students:
             sheet.append([student.get(field, "") for field in FIELDS])
+
+        format_student_sheet(sheet)
 
         try:
             workbook.save(self.file_path)
@@ -188,3 +205,27 @@ class StudentModel:
             return "locked"
 
         return True
+
+
+def format_student_sheet(sheet):
+    sheet.freeze_panes = "A2"
+    sheet.auto_filter.ref = sheet.dimensions
+
+    header_fill = PatternFill("solid", fgColor="DFF7FB")
+    header_font = Font(bold=True, color="12313A")
+    header_alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+    body_alignment = Alignment(vertical="top", wrap_text=True)
+
+    for column_letter, width in COLUMN_WIDTHS.items():
+        sheet.column_dimensions[column_letter].width = width
+
+    for cell in sheet[1]:
+        cell.fill = header_fill
+        cell.font = header_font
+        cell.alignment = header_alignment
+
+    for row in sheet.iter_rows(min_row=2):
+        for cell in row:
+            cell.alignment = body_alignment
+
+    sheet.row_dimensions[1].height = 32
