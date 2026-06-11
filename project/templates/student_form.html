@@ -177,10 +177,100 @@
 
                 <div class="form-actions form-actions-dark">
                     <a class="btn-filter" href="{{ url_for('student_web.dashboard') }}">Cancel</a>
+                    {% if not is_edit %}
+                        <button class="btn-filter" type="button" data-sample-student>Sample data</button>
+                    {% endif %}
                     <button class="btn-primary" type="submit">{{ "Update student" if is_edit else "Add student" }}</button>
                 </div>
             </form>
         </section>
     </main>
 </div>
+{% if not is_edit %}
+<script>
+    (function () {
+        var button = document.querySelector("[data-sample-student]");
+        if (!button) {
+            return;
+        }
+
+        var firstNames = [
+            "Maria Angela", "John Carlo", "Princess Mae", "Mark Anthony", "Andrea Nicole",
+            "Joshua Miguel", "Katrina Joy", "Christian Paul", "Angelica Rose", "Jerome Luis"
+        ];
+        var lastNames = [
+            "Santos", "Dela Cruz", "Reyes", "Garcia", "Mendoza",
+            "Ramos", "Torres", "Flores", "Bautista", "Villanueva"
+        ];
+        var courses = [
+            "Bachelor of Science in Psychology",
+            "Bachelor of Secondary Education Major in English",
+            "Bachelor of Secondary Education Major in Social Studies",
+            "Bachelor of Elementary Education",
+            "Bachelor of Science in Information Technology",
+            "Bachelor of Science in Computer Engineering",
+            "Bachelor of Science in Industrial Engineering",
+            "Bachelor of Science in Business Administration Major in Human Resource Management",
+            "Diploma in Computer Engineering Technology",
+            "Diploma in Information Technology"
+        ];
+        var addresses = [
+            "Sta. Mesa, Manila", "Cubao, Quezon City", "Bacoor, Cavite", "San Pedro, Laguna", "Marikina City",
+            "Pasig City", "Caloocan City", "Taguig City", "Dasmarinas, Cavite", "Antipolo, Rizal"
+        ];
+        var emergencyFirstNames = [
+            "Rogelio", "Lorna", "Aileen", "Carmen", "Jose",
+            "Marites", "Edgardo", "Rosalinda", "Nestor", "Gloria"
+        ];
+        var relationships = ["Father", "Mother", "Guardian"];
+        var yearLevels = ["1st year", "2nd year", "3rd year", "4th year", "5th year"];
+        var codePairs = ["BN", "CR", "MN", "LP", "QC", "CV", "LG", "MK", "PS", "TG"];
+        var samples = [];
+
+        for (var index = 0; index < 100; index += 1) {
+            var firstName = firstNames[index % firstNames.length];
+            var lastName = lastNames[Math.floor(index / firstNames.length) % lastNames.length];
+            var emergencyLastName = lastNames[(index + 3) % lastNames.length];
+            var studentNumber = String(541 + index).padStart(5, "0");
+            var contactSuffix = String(1234567 + index).padStart(7, "0");
+            var emergencySuffix = String(7654321 + index).padStart(7, "0");
+
+            samples.push({
+                student_id: "2025-" + studentNumber + "-" + codePairs[index % codePairs.length] + "-" + (index % 10),
+                name: firstName + " " + lastName,
+                course: courses[index % courses.length],
+                year_level: yearLevels[index % yearLevels.length],
+                age: String(18 + (index % 8)),
+                contact_number: "09" + String(17 + (index % 80)).padStart(2, "0") + contactSuffix,
+                address: addresses[index % addresses.length],
+                emergency_name: emergencyFirstNames[index % emergencyFirstNames.length] + " " + emergencyLastName,
+                emergency_relationship: relationships[index % relationships.length],
+                emergency_contact_number: "09" + String(28 + (index % 70)).padStart(2, "0") + emergencySuffix
+            });
+        }
+
+        function setValue(name, value) {
+            var field = document.querySelector("[name='" + name + "']");
+            if (field) {
+                field.value = value;
+            }
+        }
+
+        button.addEventListener("click", function () {
+            var sample = samples[Math.floor(Math.random() * samples.length)];
+            Object.keys(sample).forEach(function (name) {
+                if (name === "year_level") {
+                    var option = document.querySelector("[name='year_level'][value='" + sample[name] + "']");
+                    if (option) {
+                        option.checked = true;
+                    }
+                    return;
+                }
+
+                setValue(name, sample[name]);
+            });
+        });
+    })();
+</script>
+{% endif %}
 {% endblock %}

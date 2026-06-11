@@ -133,7 +133,23 @@
                     </tbody>
                 </table>
                 <div class="footer-bar">
-                    <span>Showing {{ students|length }} of {{ total_students }} student{% if total_students != 1 %}s{% endif %}</span>
+                    <span>
+                        Showing {{ ((page - 1) * 15) + 1 }}-{{ ((page - 1) * 15) + students|length }}
+                        of {{ total_filtered }} student{% if total_filtered != 1 %}s{% endif %}
+                    </span>
+                    <nav class="pagination" aria-label="Student table pages">
+                        {% if has_previous %}
+                            <a class="btn-filter" href="{{ url_for('student_web.dashboard', q=query, page=page - 1) }}">Previous</a>
+                        {% else %}
+                            <span class="btn-filter is-disabled" aria-disabled="true">Previous</span>
+                        {% endif %}
+                        <span class="page-count">Page {{ page }} of {{ total_pages }}</span>
+                        {% if has_next %}
+                            <a class="btn-filter" href="{{ url_for('student_web.dashboard', q=query, page=page + 1) }}">Next</a>
+                        {% else %}
+                            <span class="btn-filter is-disabled" aria-disabled="true">Next</span>
+                        {% endif %}
+                    </nav>
                 </div>
             {% else %}
                 <div class="empty-state">
