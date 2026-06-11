@@ -3,8 +3,38 @@ from pathlib import Path
 from openpyxl import Workbook, load_workbook
 
 
-FIELDS = ["student_id", "name", "course", "year_level", "contact_number", "status"]
-HEADERS = ["Student ID", "Name", "Course", "Year", "Contact Number", "Status"]
+FIELDS = [
+    "student_id",
+    "name",
+    "course",
+    "year_level",
+    "age",
+    "contact_number",
+    "address",
+    "emergency_name",
+    "emergency_relationship",
+    "emergency_contact_number",
+    "status",
+]
+HEADERS = [
+    "Student ID",
+    "Name",
+    "Course",
+    "Year",
+    "Age",
+    "Contact Number",
+    "Address",
+    "Emergency Contact Name",
+    "Emergency Contact Relationship",
+    "Emergency Contact Number",
+    "Status",
+]
+LEGACY_HEADERS = ["Student ID", "Name", "Course", "Year", "Contact Number", "Status"]
+LEGACY_FIELDS = ["student_id", "name", "course", "year_level", "contact_number", "status"]
+AGE_HEADERS = ["Student ID", "Name", "Course", "Year", "Age", "Contact Number", "Status"]
+AGE_FIELDS = ["student_id", "name", "course", "year_level", "age", "contact_number", "status"]
+ADDRESS_HEADERS = ["Student ID", "Name", "Course", "Year", "Age", "Contact Number", "Address", "Status"]
+ADDRESS_FIELDS = ["student_id", "name", "course", "year_level", "age", "contact_number", "address", "status"]
 
 
 class StudentModel:
@@ -50,15 +80,29 @@ class StudentModel:
         workbook = load_workbook(self.file_path)
         sheet = workbook.active
         students = []
+        headers = [cell.value for cell in sheet[1]]
+        if headers == LEGACY_HEADERS:
+            fields = LEGACY_FIELDS
+        elif headers == AGE_HEADERS:
+            fields = AGE_FIELDS
+        elif headers == ADDRESS_HEADERS:
+            fields = ADDRESS_FIELDS
+        else:
+            fields = FIELDS
 
         for row in sheet.iter_rows(min_row=2, values_only=True):
             if not any(row):
                 continue
 
             student = {}
-            for field, value in zip(FIELDS, row):
+            for field, value in zip(fields, row):
                 student[field] = "" if value is None else str(value)
 
+            student.setdefault("age", "")
+            student.setdefault("address", "")
+            student.setdefault("emergency_name", "")
+            student.setdefault("emergency_relationship", "")
+            student.setdefault("emergency_contact_number", "")
             student.setdefault("status", "Active")
             students.append(student)
 
@@ -73,7 +117,12 @@ class StudentModel:
         for student in self.students:
             sheet.append([student.get(field, "") for field in FIELDS])
 
-        workbook.save(self.file_path)
+        try:
+            workbook.save(self.file_path)
+        except PermissionError:
+            return False
+
+        return True
 
     def get_all_students(self):
         return self.students
@@ -89,7 +138,10 @@ class StudentModel:
             return False
 
         self.students.append(student)
-        self.save_students()
+        if not self.save_students():
+            self.students.remove(student)
+            return "locked"
+
         return True
 
     def search_students(self, query):
@@ -113,11 +165,16 @@ class StudentModel:
         if not student:
             return False
 
+        original = student.copy()
         for field, value in updates.items():
             if value:
                 student[field] = value
 
-        self.save_students()
+        if not self.save_students():
+            student.clear()
+            student.update(original)
+            return "locked"
+
         return True
 
     def delete_student(self, student_id):
@@ -126,5 +183,8 @@ class StudentModel:
             return False
 
         self.students.remove(student)
-        self.save_students()
+        if not self.save_students():
+            self.students.append(student)
+            return "locked"
+
         return True
