@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 {% set is_edit = mode == "edit" %}
-{% block title %}{{ "Edit" if is_edit else "Add" }} Student - Polytechnic University of the Philippines{% endblock %}
+{% block title %}{{ "Update" if is_edit else "Add" }} Student - Polytechnic University of the Philippines{% endblock %}
 
 {% block body %}
-<div class="admin-shell">
+<div class="admin-shell {% if not is_edit %}add-student-shell{% endif %}">
     <header class="admin-topbar">
         <div class="brand">
             <img class="brand-logo" src="{{ url_for('static', filename='pup-logo.png') }}" alt="Polytechnic University of the Philippines logo">
@@ -17,7 +17,7 @@
     <main class="admin-main form-main">
         <div class="page-header">
             <p class="page-label">{{ "Update record" if is_edit else "New record" }}</p>
-            <h1 class="page-title">{{ "Edit student" if is_edit else "Add student" }}</h1>
+            <h1 class="page-title">{{ "Update student" if is_edit else "Add student" }}</h1>
         </div>
 
         {% include "_messages.html" %}
@@ -38,12 +38,12 @@
                     <div class="form-grid">
                         <div class="field">
                             <label for="student_id">Student ID <span>required</span></label>
-                            <input id="student_id" name="student_id" type="text" inputmode="numeric" placeholder="e.g. 221243378" value="{{ student.student_id if student else '' }}" {% if is_edit %}disabled{% endif %} required>
+                            <input id="student_id" name="student_id" type="text" maxlength="15" placeholder="e.g. 2025-00540-BN-0" value="{{ student.student_id if student else '' }}" {% if is_edit %}disabled{% endif %} required>
                         </div>
 
                         <div class="field">
                             <label for="name">Full name <span>required</span></label>
-                            <input id="name" name="name" type="text" placeholder="e.g. Juan dela Cruz" value="{{ student.name if student else '' }}" required>
+                            <input id="name" name="name" type="text" value="{{ student.name if student else '' }}" required>
                         </div>
                     </div>
                 </section>
@@ -82,14 +82,26 @@
                             </select>
                         </div>
 
-                        <div class="field">
-                            <label for="status">Status</label>
-                            {% set selected_status = student.status if student and student.status else 'Active' %}
-                            <select id="status" name="status">
-                                <option value="Active" {% if selected_status == "Active" %}selected{% endif %}>Active</option>
-                                <option value="Inactive" {% if selected_status == "Inactive" %}selected{% endif %}>Inactive</option>
-                            </select>
-                        </div>
+                        {% if is_edit %}
+                            <div class="field">
+                                <label for="age">Age <span>required</span></label>
+                                <input id="age" name="age" type="number" inputmode="numeric" min="1" max="120" value="{{ student.age if student else '' }}" required>
+                            </div>
+
+                            <div class="field">
+                                <label for="status">Status</label>
+                                {% set selected_status = student.status if student and student.status else 'Active' %}
+                                <select id="status" name="status">
+                                    <option value="Active" {% if selected_status == "Active" %}selected{% endif %}>Active</option>
+                                    <option value="Inactive" {% if selected_status == "Inactive" %}selected{% endif %}>Inactive</option>
+                                </select>
+                            </div>
+                        {% else %}
+                            <div class="field">
+                                <label for="age">Age <span>required</span></label>
+                                <input id="age" name="age" type="number" inputmode="numeric" min="1" max="120" value="{{ student.age if student else '' }}" required>
+                            </div>
+                        {% endif %}
                     </div>
 
                     <fieldset class="year-options">
@@ -104,27 +116,68 @@
                     </fieldset>
                 </section>
 
-                <section class="form-section" aria-labelledby="contact-title">
-                    <div class="section-heading">
-                        <span class="section-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24"><path d="M7 4h4l2 5-2.4 1.6a10.8 10.8 0 0 0 4.8 4.8L17 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 4a2 2 0 0 1 2-2h2v2H5a15 15 0 0 0 15 15v-2l-2-.8-1.7 2.5-.8-.3a12.9 12.9 0 0 1-7.9-7.9l-.3-.8L9.8 8 9 6H7V4Z"/></svg>
-                        </span>
-                        <div>
-                            <h2 id="contact-title">Contact</h2>
-                            <p>Reach the student directly</p>
+                <div class="form-section-pair">
+                    <section class="form-section" aria-labelledby="contact-title">
+                        <div class="section-heading">
+                            <span class="section-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M7 4h4l2 5-2.4 1.6a10.8 10.8 0 0 0 4.8 4.8L17 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 4a2 2 0 0 1 2-2h2v2H5a15 15 0 0 0 15 15v-2l-2-.8-1.7 2.5-.8-.3a12.9 12.9 0 0 1-7.9-7.9l-.3-.8L9.8 8 9 6H7V4Z"/></svg>
+                            </span>
+                            <div>
+                                <h2 id="contact-title">Contact</h2>
+                                <p>Reach the student directly</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="field">
-                        <label for="contact_number">Contact number</label>
-                        <input id="contact_number" name="contact_number" type="text" inputmode="numeric" placeholder="09XXXXXXXXX" value="{{ student.contact_number if student else '' }}" required>
-                        <p class="field-help">Philippine mobile format: 09XX XXX XXXX</p>
-                    </div>
-                </section>
+                        <div class="field">
+                            <label for="contact_number">Contact number</label>
+                            <input id="contact_number" name="contact_number" type="text" inputmode="numeric" minlength="11" maxlength="11" value="{{ student.contact_number if student else '' }}" required>
+                            <p class="field-help">Enter exactly 11 numbers.</p>
+                        </div>
+
+                        <div class="field">
+                            <label for="address">Address <span>required</span></label>
+                            <input id="address" name="address" type="text" value="{{ student.address if student else '' }}" required>
+                        </div>
+                    </section>
+
+                    <section class="form-section" aria-labelledby="emergency-title">
+                        <div class="section-heading">
+                            <span class="section-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Zm0 2.2L18 6.5V11c0 3.9-2.5 7.6-6 8.8-3.5-1.2-6-4.9-6-8.8V6.5l6-2.3ZM11 7h2v4h4v2h-4v4h-2v-4H7v-2h4V7Z"/></svg>
+                            </span>
+                            <div>
+                                <h2 id="emergency-title">Emergency contact</h2>
+                                <p>Person to contact when needed</p>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="emergency_name">Name <span>required</span></label>
+                            <input id="emergency_name" name="emergency_name" type="text" value="{{ student.emergency_name if student else '' }}" required>
+                        </div>
+
+                        <div class="field">
+                            <label for="emergency_relationship">Relationship <span>required</span></label>
+                            {% set selected_relationship = student.emergency_relationship if student else '' %}
+                            <select id="emergency_relationship" name="emergency_relationship" required>
+                                <option value="" {% if not selected_relationship %}selected{% endif %}>Select relationship...</option>
+                                {% for relationship in ["Guardian", "Mother", "Father"] %}
+                                    <option value="{{ relationship }}" {% if selected_relationship == relationship %}selected{% endif %}>{{ relationship }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label for="emergency_contact_number">Contact number <span>required</span></label>
+                            <input id="emergency_contact_number" name="emergency_contact_number" type="text" inputmode="numeric" minlength="11" maxlength="11" value="{{ student.emergency_contact_number if student else '' }}" required>
+                            <p class="field-help">Enter exactly 11 numbers.</p>
+                        </div>
+                    </section>
+                </div>
 
                 <div class="form-actions form-actions-dark">
                     <a class="btn-filter" href="{{ url_for('student_web.dashboard') }}">Cancel</a>
-                    <button class="btn-primary" type="submit">{{ "Save changes" if is_edit else "Add student" }}</button>
+                    <button class="btn-primary" type="submit">{{ "Update student" if is_edit else "Add student" }}</button>
                 </div>
             </form>
         </section>

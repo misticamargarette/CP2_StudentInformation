@@ -14,10 +14,19 @@
         </div>
         <div class="topbar-right">
             <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark mode" aria-pressed="false">
-                <span class="theme-option theme-light">Light</span>
-                <span class="theme-option theme-dark">Dark</span>
+                <span class="theme-option theme-light" title="Light mode">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 4V1h2v3h-2Zm0 19v-3h2v3h-2ZM4.2 5.6 2.1 3.5l1.4-1.4 2.1 2.1-1.4 1.4Zm14.2 14.2-2.1-2.1 1.4-1.4 2.1 2.1-1.4 1.4ZM1 13v-2h3v2H1Zm19 0v-2h3v2h-3ZM3.5 21.9l-1.4-1.4 2.1-2.1 1.4 1.4-2.1 2.1ZM17.7 5.6l-1.4-1.4 2.1-2.1 1.4 1.4-2.1 2.1ZM13 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z"/>
+                    </svg>
+                    <span class="sr-only">Light</span>
+                </span>
+                <span class="theme-option theme-dark" title="Dark mode">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20.8 15.1A8.4 8.4 0 0 1 8.9 3.2 9 9 0 1 0 20.8 15.1Z"/>
+                    </svg>
+                    <span class="sr-only">Dark</span>
+                </span>
             </button>
-            <div class="avatar">AD</div>
             <a class="btn-ghost" href="{{ url_for('student_web.logout') }}">Log out</a>
         </div>
     </header>
@@ -68,6 +77,7 @@
                         <col class="col-name">
                         <col class="col-course">
                         <col class="col-year">
+                        <col class="col-age">
                         <col class="col-contact">
                         <col class="col-status">
                         <col class="col-actions">
@@ -78,6 +88,7 @@
                             <th>Name</th>
                             <th>Course</th>
                             <th>Year level</th>
+                            <th>Age</th>
                             <th>Contact</th>
                             <th>Status</th>
                             <th>Actions</th>
@@ -93,8 +104,9 @@
                                         <span>{{ student.name }}</span>
                                     </div>
                                 </td>
-                                <td><span class="course-pill">{{ student.course }}</span></td>
+                                <td><span class="course-pill">{{ student.course_short }}</span></td>
                                 <td><span class="year-pill">{{ student.year_level }}</span></td>
+                                <td class="compact-cell">{{ student.age }}</td>
                                 <td class="compact-cell">{{ student.contact_number }}</td>
                                 <td>
                                     <span class="status-dot {% if student.status == 'Active' %}dot-active{% else %}dot-inactive{% endif %}"></span>
@@ -102,9 +114,17 @@
                                 </td>
                                 <td>
                                     <div class="action-btns">
-                                        <a class="btn-edit" href="{{ url_for('student_web.edit_student', student_id=student.student_id) }}">Edit</a>
+                                        <a class="btn-edit btn-icon" href="{{ url_for('student_web.edit_student', student_id=student.student_id) }}" aria-label="Update {{ student.name }}" title="Update">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                <path d="M5 18.1 15.6 7.5l1.9 1.9L6.9 20H5v-1.9ZM17 6.1l1.1-1.1a1.4 1.4 0 0 1 2 2L19 8.1l-2-2Z"/>
+                                            </svg>
+                                        </a>
                                         <form method="post" action="{{ url_for('student_web.delete_student', student_id=student.student_id) }}" data-delete-form data-student-name="{{ student.name }}">
-                                            <button class="btn-del" type="submit">Delete</button>
+                                            <button class="btn-del btn-icon" type="submit" aria-label="Delete {{ student.name }}" title="Delete">
+                                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                    <path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm1 6h2v9h-2V9Zm4 0h2v9h-2V9ZM7 9h2l.8 10h4.4L15 9h2l-.9 11a2 2 0 0 1-2 2H9.9a2 2 0 0 1-2-2L7 9Z"/>
+                                                </svg>
+                                            </button>
                                         </form>
                                     </div>
                                 </td>
