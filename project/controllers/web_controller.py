@@ -178,6 +178,7 @@ def get_student_from_form(include_id=True, form_mode="add"):
         "course": request.form.get("course", "").strip(),
         "year_level": request.form.get("year_level", "").strip(),
         "age": request.form.get("age", "").strip(),
+        "gender": request.form.get("gender", "").strip(),
         "contact_number": request.form.get("contact_number", "").strip(),
         "address": request.form.get("address", "").strip(),
         "emergency_name": request.form.get("emergency_name", "").strip(),
@@ -240,6 +241,7 @@ def validate_student(student, include_id=True, form_mode="add"):
         "course",
         "year_level",
         "age",
+        "gender",
         "contact_number",
         "address",
         "emergency_name",
@@ -265,6 +267,9 @@ def validate_student(student, include_id=True, form_mode="add"):
     if not age.isdigit() or not 1 <= int(age) <= 120:
         return "Age must be a number from 1 to 120."
 
+    if student.get("gender") not in ["Female", "Male"]:
+        return "Please select a valid gender."
+
     if form_mode == "edit" and student.get("status") not in ["Active", "Inactive"]:
         return "Please select a valid status."
 
@@ -275,6 +280,7 @@ def format_student_row(student, index):
     return {
         **student,
         "age": student.get("age", ""),
+        "gender": student.get("gender", ""),
         "address": student.get("address", ""),
         "emergency_name": student.get("emergency_name", ""),
         "emergency_relationship": student.get("emergency_relationship", ""),
