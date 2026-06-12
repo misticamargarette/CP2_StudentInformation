@@ -726,7 +726,7 @@ tbody tr:hover {
 }
 
 .admin-topbar {
-    height: 86px;
+    height: 112px;
     padding: 0 38px;
     background: var(--topbar-bg);
     border-bottom: 1px solid var(--border);
@@ -807,10 +807,10 @@ tbody tr:hover {
 }
 
 .brand-logo {
-    width: 58px;
-    height: 58px;
+    width: 104px;
+    height: 82px;
+    flex: 0 0 104px;
     object-fit: contain;
-    border-radius: 50%;
 }
 
 .brand-name {
@@ -1139,7 +1139,7 @@ tbody tr:hover {
 
 .admin-table-wrap table {
     width: 100%;
-    min-width: 820px;
+    min-width: 900px;
     table-layout: fixed;
     border-collapse: collapse;
 }
@@ -1173,35 +1173,39 @@ tbody tr:hover {
 }
 
 .col-id {
-    width: 13%;
-}
-
-.col-name {
-    width: 23%;
-}
-
-.col-course {
-    width: 14%;
-}
-
-.col-year {
     width: 12%;
 }
 
+.col-name {
+    width: 21%;
+}
+
+.col-course {
+    width: 13%;
+}
+
+.col-year {
+    width: 11%;
+}
+
 .col-age {
-    width: 7%;
+    width: 6%;
+}
+
+.col-gender {
+    width: 11%;
 }
 
 .col-contact {
-    width: 14%;
+    width: 13%;
 }
 
 .col-status {
-    width: 10%;
+    width: 8%;
 }
 
 .col-actions {
-    width: 10%;
+    width: 8%;
 }
 
 .mono {

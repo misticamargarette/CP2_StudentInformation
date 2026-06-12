@@ -10,6 +10,7 @@ FIELDS = [
     "course",
     "year_level",
     "age",
+    "gender",
     "contact_number",
     "address",
     "emergency_name",
@@ -23,6 +24,7 @@ HEADERS = [
     "Course",
     "Year",
     "Age",
+    "Gender",
     "Contact Number",
     "Address",
     "Emergency Contact Name",
@@ -36,12 +38,13 @@ COLUMN_WIDTHS = {
     "C": 58,
     "D": 14,
     "E": 8,
-    "F": 18,
-    "G": 38,
-    "H": 28,
-    "I": 34,
-    "J": 28,
-    "K": 14,
+    "F": 14,
+    "G": 18,
+    "H": 38,
+    "I": 28,
+    "J": 34,
+    "K": 28,
+    "L": 14,
 }
 LEGACY_HEADERS = ["Student ID", "Name", "Course", "Year", "Contact Number", "Status"]
 LEGACY_FIELDS = ["student_id", "name", "course", "year_level", "contact_number", "status"]
@@ -49,6 +52,8 @@ AGE_HEADERS = ["Student ID", "Name", "Course", "Year", "Age", "Contact Number", 
 AGE_FIELDS = ["student_id", "name", "course", "year_level", "age", "contact_number", "status"]
 ADDRESS_HEADERS = ["Student ID", "Name", "Course", "Year", "Age", "Contact Number", "Address", "Status"]
 ADDRESS_FIELDS = ["student_id", "name", "course", "year_level", "age", "contact_number", "address", "status"]
+GENDER_HEADERS = ["Student ID", "Name", "Course", "Year", "Age", "Gender", "Contact Number", "Address", "Emergency Contact Name", "Emergency Contact Relationship", "Emergency Contact Number", "Status"]
+GENDER_FIELDS = FIELDS
 
 
 class StudentModel:
@@ -102,6 +107,8 @@ class StudentModel:
             fields = AGE_FIELDS
         elif headers == ADDRESS_HEADERS:
             fields = ADDRESS_FIELDS
+        elif headers == GENDER_HEADERS:
+            fields = GENDER_FIELDS
         else:
             fields = FIELDS
 
@@ -114,6 +121,7 @@ class StudentModel:
                 student[field] = "" if value is None else str(value)
 
             student.setdefault("age", "")
+            student.setdefault("gender", "")
             student.setdefault("address", "")
             student.setdefault("emergency_name", "")
             student.setdefault("emergency_relationship", "")

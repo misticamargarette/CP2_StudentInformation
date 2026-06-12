@@ -101,6 +101,17 @@
                             </div>
 
                             <div class="field">
+                                <label for="gender">Gender <span>required</span></label>
+                                {% set selected_gender = student.gender if student else '' %}
+                                <select id="gender" name="gender" required>
+                                    <option value="" {% if not selected_gender %}selected{% endif %}>Select gender...</option>
+                                    {% for gender in ["Female", "Male"] %}
+                                        <option value="{{ gender }}" {% if selected_gender == gender %}selected{% endif %}>{{ gender }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="field">
                                 <label for="status">Status</label>
                                 {% set selected_status = student.status if student and student.status else 'Active' %}
                                 <select id="status" name="status">
@@ -112,6 +123,17 @@
                             <div class="field">
                                 <label for="age">Age <span>required</span></label>
                                 <input id="age" name="age" type="number" inputmode="numeric" min="1" max="120" value="{{ student.age if student else '' }}" required>
+                            </div>
+
+                            <div class="field">
+                                <label for="gender">Gender <span>required</span></label>
+                                {% set selected_gender = student.gender if student else '' %}
+                                <select id="gender" name="gender" required>
+                                    <option value="" {% if not selected_gender %}selected{% endif %}>Select gender...</option>
+                                    {% for gender in ["Female", "Male"] %}
+                                        <option value="{{ gender }}" {% if selected_gender == gender %}selected{% endif %}>{{ gender }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         {% endif %}
                     </div>
@@ -256,6 +278,7 @@
                 course: courses[index % courses.length],
                 year_level: yearLevels[index % yearLevels.length],
                 age: String(18 + (index % 8)),
+                gender: index % 2 === 0 ? "Female" : "Male",
                 contact_number: "09" + String(17 + (index % 80)).padStart(2, "0") + contactSuffix,
                 address: addresses[index % addresses.length],
                 emergency_name: emergencyFirstNames[index % emergencyFirstNames.length] + " " + emergencyLastName,

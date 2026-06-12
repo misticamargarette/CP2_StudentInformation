@@ -4,7 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Polytechnic University of the Philippines{% endblock %}</title>
-    <link rel="icon" href="{{ url_for('static', filename='pup-logo.png') }}" type="image/png">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" sizes="any">
+    <link rel="icon" href="{{ url_for('static', filename='pup-favicon-32.png') }}" type="image/png" sizes="32x32">
+    <link rel="icon" href="{{ url_for('static', filename='pup-favicon-192.png') }}" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='pup-favicon-192.png') }}">
     <script>
         (function () {
             var theme = localStorage.getItem("theme") || "light";

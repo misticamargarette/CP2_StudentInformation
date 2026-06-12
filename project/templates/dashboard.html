@@ -96,6 +96,7 @@
                         <col class="col-course">
                         <col class="col-year">
                         <col class="col-age">
+                        <col class="col-gender">
                         <col class="col-contact">
                         <col class="col-status">
                         <col class="col-actions">
@@ -107,6 +108,7 @@
                             <th>Course</th>
                             <th>Year level</th>
                             <th>Age</th>
+                            <th>Gender</th>
                             <th>Contact</th>
                             <th>Status</th>
                             <th>Actions</th>
@@ -125,6 +127,7 @@
                                 <td><span class="course-pill">{{ student.course_short }}</span></td>
                                 <td><span class="year-pill">{{ student.year_level }}</span></td>
                                 <td class="compact-cell">{{ student.age }}</td>
+                                <td class="compact-cell">{{ student.gender }}</td>
                                 <td class="compact-cell">{{ student.contact_number }}</td>
                                 <td>
                                     <span class="status-dot {% if student.status == 'Active' %}dot-active{% else %}dot-inactive{% endif %}"></span>
