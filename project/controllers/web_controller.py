@@ -264,8 +264,8 @@ def validate_student(student, include_id=True, form_mode="add"):
         return "Please select a valid emergency contact relationship."
 
     age = student.get("age", "")
-    if not age.isdigit() or not 1 <= int(age) <= 120:
-        return "Age must be a number from 1 to 120."
+    if not age.isdigit() or not 18 <= int(age) <= 120:
+        return "Age must be 18 years old or above."
 
     if student.get("gender") not in ["Female", "Male"]:
         return "Please select a valid gender."

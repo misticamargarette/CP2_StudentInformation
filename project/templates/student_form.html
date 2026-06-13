@@ -97,7 +97,7 @@
                         {% if is_edit %}
                             <div class="field">
                                 <label for="age">Age <span>required</span></label>
-                                <input id="age" name="age" type="number" inputmode="numeric" min="1" max="120" value="{{ student.age if student else '' }}" required>
+                                <input id="age" name="age" type="number" inputmode="numeric" min="18" max="120" value="{{ student.age if student else '' }}" required>
                             </div>
 
                             <div class="field">
@@ -122,7 +122,7 @@
                         {% else %}
                             <div class="field">
                                 <label for="age">Age <span>required</span></label>
-                                <input id="age" name="age" type="number" inputmode="numeric" min="1" max="120" value="{{ student.age if student else '' }}" required>
+                                <input id="age" name="age" type="number" inputmode="numeric" min="18" max="120" value="{{ student.age if student else '' }}" required>
                             </div>
 
                             <div class="field">
